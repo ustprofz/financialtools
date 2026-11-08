@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Diversification | Financial Tools · St. Thomas</title>
+    
+    <!-- Chart.js for the dynamic graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for rendering the math formulas at the bottom -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #003366;
+            --secondary: #e6e9ed;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: var(--text);
+            background-color: #f8f9fa;
+        }
+        h1, h2, h3 { color: var(--primary); }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex: 1 1 400px;
+        }
+        .chart-panel {
+            flex: 2 1 800px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .form-group label { font-weight: bold; font-size: 0.9em; }
+        .form-group input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .slider-group { margin-top: 15px; margin-bottom: 15px; }
+        .slider-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .slider-group input[type="range"] { width: 100%; cursor: pointer; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.85em;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+        
+        /* Made table headers sticky */
+        th { 
+            background-color: var(--primary); 
+            color: white; 
+            text-align: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 10;
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4);
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover { background-color: #002244; }
+        .btn.active { background-color: #d9534f; }
+        
+        canvas { max-height: 500px; width: 100%; }
+        .chart-controls {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--secondary);
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .formulas-panel {
+            flex: 1 1 100%; 
+            line-height: 1.6;
+        }
+        .formulas-panel ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .formula-box {
+            background: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        /* Creator information and university branding */
+        .creator-header {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            align-items: center;
+            gap: 28px;
+            box-sizing: border-box;
+            max-width: 1400px;
+            margin: 0 auto 24px;
+            padding: 20px 28px;
+            background: #fff;
+            border-top: 4px solid #510c76;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+        .creator-header-logo {
+            display: block;
+            width: 280px;
+            max-width: 100%;
+            height: auto;
+        }
+        .creator-header-label {
+            margin: 0 0 6px;
+            color: #510c76;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .creator-header-name {
+            margin: 0;
+            color: #222;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        .creator-header-link {
+            display: inline-block;
+            margin-left: 6px;
+            color: #510c76;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .creator-header-link:hover { color: #7b328b; }
+        .creator-header-link:focus-visible {
+            outline: 2px solid #510c76;
+            outline-offset: 4px;
+            border-radius: 2px;
+        }
+        .creator-header-title {
+            margin: 5px 0 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+        .creator-header-disclaimer {
+            margin: 12px 0 0;
+            padding-top: 10px;
+            border-top: 1px solid #e6e9ed;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        @media (max-width: 720px) {
+            .creator-header {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 0;
+                padding: 0 20px 20px;
+            }
+            .creator-header-logo { justify-self: center; }
+            .creator-header-name { font-size: 21px; }
+        }
+    </style>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="icon" href="data:,">
+</head>
+<body class="ft-diversification">
+
+<header class="creator-header" aria-label="Creator information">
+    <img class="creator-header-logo" src="data:image/png;base64,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" width="739" height="301" alt="University of St. Thomas">
+    <div>
+        <p class="creator-header-label">Creator</p>
+        <p class="creator-header-name">Jiang (Will) Zhang <a class="creator-header-link" href="https://www.linkedin.com/in/jiang-will-zhang/" target="_blank" rel="noopener noreferrer" aria-label="Jiang (Will) Zhang on LinkedIn">(LinkedIn)</a></p>
+        <p class="creator-header-title">Assistant Professor of Finance, Opus College of Business, University of St. Thomas</p>
+        <p class="creator-header-disclaimer">This tool is for educational purposes only and does not constitute financial or investment advice.</p>
+    </div>
+</header>
+<nav class="ft-tool-nav" aria-label="Financial tools navigation"><div class="ft-tool-nav-inner"><a class="ft-back" href="../index.html">← All financial tools</a><div class="ft-tool-nav-links"><a href="../calculator/index.html">Financial Calculator</a><a href="../diversification/index.html" aria-current="page">Portfolio Diversification</a></div></div></nav>
+<div class="ft-tool-intro"><span class="ft-eyebrow">Financial Tools · Risk &amp; return</span><h1>Portfolio Diversification</h1><p>Explore how stock–bond weights and correlation change portfolio risk, expected return, and capital allocation.</p></div>
+
+
+<div class="container">
+    <!-- LEFT PANEL: Inputs & Table -->
+    <div class="panel">
+        <h2>Asset Parameters</h2>
+        
+        <div class="form-group">
+            <label>Stock Index Expected Return (%)</label>
+            <input type="number" id="r_s" value="10" step="0.1">
+        </div>
+        <div class="form-group">
+            <label>Stock Index Std Deviation (%)</label>
+            <input type="number" id="sd_s" value="20" step="0.1">
+        </div>
+        <hr>
+        <div class="form-group">
+            <label>Bond Index Expected Return (%)</label>
+            <input type="number" id="r_b" value="5" step="0.1">
+        </div>
+        <div class="form-group">
+            <label>Bond Index Std Deviation (%)</label>
+            <input type="number" id="sd_b" value="8" step="0.1">
+        </div>
+        <hr>
+        <div class="form-group">
+            <label>Risk-Free Rate (%)</label>
+            <input type="number" id="r_f" value="3" step="0.1">
+        </div>
+
+        <div class="slider-group">
+            <label>Correlation (ρ): <span id="corr_val1">0.20</span></label>
+            <input type="range" id="corr1" min="-1" max="1" step="0.01" value="0.2">
+        </div>
+
+        <h3>Portfolio Combinations</h3>
+        <div style="max-height: 250px; overflow-y: auto;">
+            <table id="portfolio-table">
+                <thead>
+                    <tr>
+                        <th>W_Stock</th>
+                        <th>W_Bond</th>
+                        <th>Exp Return (%)</th>
+                        <th>Std Dev (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: Chart -->
+    <div class="panel chart-panel">
+        <h2>Investment Opportunity Set</h2>
+        <p style="font-size: 0.9em; color: #555;"><em>Click any point on the curve, individual assets, or specific portfolios to draw the Capital Allocation Line (CAL).</em></p>
+        <canvas id="portfolioChart"></canvas>
+        
+        <div class="chart-controls">
+            <button id="toggle-optimal" class="btn">Show Optimal Risky Portfolio & CAL</button>
+        </div>
+    </div>
+
+    <!-- BOTTOM PANEL: Formulas & Definitions -->
+    <div class="panel formulas-panel">
+        <h2>Portfolio Theory Formulas & Definitions</h2>
+        
+        <p><strong>Variable Definitions:</strong></p>
+        <ul>
+            <li>$w_S, w_B$: The proportionate weights of the stock and bond in the portfolio ($w_S + w_B = 1$).</li>
+            <li>$E(r_S), E(r_B)$: The expected rates of return for the stock and bond indexes.</li>
+            <li>$\sigma_S, \sigma_B$: The standard deviation (risk) of the stock and bond returns.</li>
+            <li>$\rho$: The correlation coefficient between the stock and bond returns (ranging from -1 to 1).</li>
+            <li>$Cov(r_S, r_B)$: The covariance between the two assets. It is calculated as: $Cov(r_S, r_B) = \rho \cdot \sigma_S \cdot \sigma_B$.</li>
+            <li>$r_f$: The Risk-Free Rate of return.</li>
+            <li>$S_P$: The Sharpe Ratio, measuring reward per unit of volatility.</li>
+        </ul>
+
+        <div class="formula-box">
+            <h3>1. Expected Return of the Portfolio ($E(r_P)$)</h3>
+            <p>The expected return of a two-asset portfolio is simply the weighted average of the expected returns of the individual assets:</p>
+            $$E(r_P) = w_S E(r_S) + w_B E(r_B)$$
+        </div>
+
+        <div class="formula-box">
+            <h3>2. Portfolio Risk (Variance & Standard Deviation)</h3>
+            <p>Unlike return, portfolio risk is not a simple weighted average. It depends heavily on how the assets move in relation to one another (covariance). Diversification benefits arise when $\rho < 1$.</p>
+            $$\sigma_P^2 = w_S^2 \sigma_S^2 + w_B^2 \sigma_B^2 + 2w_S w_B Cov(r_S, r_B)$$
+            $$\sigma_P = \sqrt{\sigma_P^2}$$
+        </div>
+
+        <div class="formula-box">
+            <h3>3. Minimum-Variance Portfolio</h3>
+            <p>The specific combination of assets that yields the lowest possible overall portfolio variance. Graphically, this is the leftmost point on the investment opportunity set.</p>
+            $$w_S = \frac{\sigma_B^2 - Cov(r_S, r_B)}{\sigma_S^2 + \sigma_B^2 - 2Cov(r_S, r_B)}$$
+        </div>
+
+        <div class="formula-box">
+            <h3>4. Optimal Risky Portfolio (Tangency Portfolio)</h3>
+            <p>This is the portfolio that yields the highest possible Sharpe Ratio. The Capital Allocation Line (CAL) drawn from the risk-free rate through this portfolio has the steepest possible slope, representing the best possible risk-return trade-off.</p>
+            $$S_P = \frac{E(r_P) - r_f}{\sigma_P}$$
+            <br>
+            $$w_S = \frac{[E(r_S) - r_f]\sigma_B^2 - [E(r_B) - r_f]Cov(r_S, r_B)}{[E(r_S) - r_f]\sigma_B^2 + [E(r_B) - r_f]\sigma_S^2 - [E(r_S) - r_f + E(r_B) - r_f]Cov(r_S, r_B)}$$
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Elements
+    const elRs = document.getElementById('r_s');
+    const elSds = document.getElementById('sd_s');
+    const elRb = document.getElementById('r_b');
+    const elSdb = document.getElementById('sd_b');
+    const elRf = document.getElementById('r_f');
+    const elCorr1 = document.getElementById('corr1');
+    const valCorr1 = document.getElementById('corr_val1');
+    const tableBody = document.querySelector('#portfolio-table tbody');
+    const btnOptimal = document.getElementById('toggle-optimal');
+
+    let chartInstance = null;
+    let showOptimal = false;
+    let userCalData = []; 
+
+    // Add listeners to inputs
+    elCorr1.addEventListener('input', updateDashboard);
+    [elRs, elSds, elRb, elSdb, elRf].forEach(input => {
+        input.addEventListener('input', updateDashboard);
+    });
+
+    btnOptimal.addEventListener('click', () => {
+        showOptimal = !showOptimal;
+        btnOptimal.classList.toggle('active', showOptimal);
+        btnOptimal.innerText = showOptimal ? "Hide Optimal Risky Portfolio & CAL" : "Show Optimal Risky Portfolio & CAL";
+        updateDashboard();
+    });
+
+    function getParams() {
+        return {
+            rs: parseFloat(elRs.value) || 0,
+            sds: parseFloat(elSds.value) || 0,
+            rb: parseFloat(elRb.value) || 0,
+            sdb: parseFloat(elSdb.value) || 0,
+            rf: parseFloat(elRf.value) || 0,
+            corr: parseFloat(elCorr1.value) || 0
+        };
+    }
+
+    function calcPortfolio(ws, p) {
+        const wb = 1 - ws;
+        const er = ws * p.rs + wb * p.rb;
+        const varP = Math.pow(ws * p.sds, 2) + Math.pow(wb * p.sdb, 2) + 2 * ws * wb * p.sds * p.sdb * p.corr;
+        const sd = Math.max(0, Math.sqrt(varP)); // Prevent NaN on floating point inaccuracies near 0
+        return { x: sd, y: er, ws: ws, wb: wb };
+    }
+
+    // Determine consistent axis ranges based strictly on asset inputs (ignores correlation)
+    function getAxesLimits(p) {
+        const y1 = -0.5 * p.rs + 1.5 * p.rb;
+        const y2 = 1.5 * p.rs - 0.5 * p.rb;
+        const yMin = Math.floor(Math.min(y1, y2, p.rf) - 2);
+        const yMax = Math.ceil(Math.max(y1, y2) + 5);
+
+        // Max possible Standard Deviation happens at extreme weights and extreme correlations (1 or -1)
+        const x_rho1_1 = Math.abs(-0.5 * p.sds + 1.5 * p.sdb);
+        const x_rho1_2 = Math.abs(1.5 * p.sds - 0.5 * p.sdb);
+        const x_m1_1 = Math.abs(-0.5 * p.sds - 1.5 * p.sdb);
+        const x_m1_2 = Math.abs(1.5 * p.sds - (-0.5) * p.sdb);
+        const xMax = Math.ceil(Math.max(x_rho1_1, x_rho1_2, x_m1_1, x_m1_2, p.sds, p.sdb) * 1.1);
+        
+        return { xMin: 0, xMax: xMax, yMin: yMin, yMax: yMax };
+    }
+
+    function updateDashboard() {
+        const p = getParams();
+        const axes = getAxesLimits(p);
+        
+        // Update label
+        valCorr1.innerText = p.corr.toFixed(2);
+
+        // 1. Generate Curve Data
+        const curveData = [];
+        tableBody.innerHTML = ''; // Clear table
+        
+        for (let ws = -0.5; ws <= 1.5; ws += 0.05) {
+            const pt = calcPortfolio(ws, p);
+            curveData.push(pt);
+            
+            // Populate table for specific increments (every 10%)
+            if (Math.abs((ws * 100) % 10) < 1e-5 || Math.abs((ws * 100) % 10 - 10) < 1e-5 ) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${(pt.ws * 100).toFixed(0)}%</td>
+                    <td>${(pt.wb * 100).toFixed(0)}%</td>
+                    <td>${pt.y.toFixed(2)}</td>
+                    <td>${pt.x.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(tr);
+            }
+        }
+
+        // 2. Minimum Variance Portfolio (MVP)
+        const varS = Math.pow(p.sds, 2);
+        const varB = Math.pow(p.sdb, 2);
+        const cov = p.sds * p.sdb * p.corr;
+        
+        let ws_mvp = (varB - cov) / (varS + varB - 2 * cov);
+        if (!isFinite(ws_mvp)) ws_mvp = 0.5; 
+        const mvp = calcPortfolio(ws_mvp, p);
+
+        // 3. Optimal Risky Portfolio (Tangency)
+        let maxSharpe = -Infinity;
+        let opt = null;
+        for (let ws = -3.0; ws <= 3.0; ws += 0.01) {
+            const pt = calcPortfolio(ws, p);
+            if (pt.y > p.rf && pt.x > 0.0001) {
+                const sharpe = (pt.y - p.rf) / pt.x;
+                if (sharpe > maxSharpe) {
+                    maxSharpe = sharpe;
+                    opt = pt;
+                }
+            }
+        }
+        if (!opt) opt = calcPortfolio(1.0, p); 
+
+        // Optimal CAL line
+        const optimalCalData = [];
+        if (showOptimal) {
+            const slope = (opt.y - p.rf) / opt.x;
+            optimalCalData.push({x: 0, y: p.rf});
+            optimalCalData.push({x: axes.xMax, y: p.rf + slope * axes.xMax});
+        }
+
+        // Individual Assets (calculated directly via weight so they contain ws/wb for clicking)
+        const stockDot = calcPortfolio(1.0, p);
+        const bondDot = calcPortfolio(0.0, p);
+
+        // Risk Free Asset Dot
+        const rfDot = { x: 0, y: p.rf };
+
+        // Recalculate User CAL if it exists
+        if (userCalData.length > 0) {
+            const storedWs = userCalData[0].ws; 
+            if (storedWs !== undefined) {
+                const newClickedPoint = calcPortfolio(storedWs, p);
+                const slope = (newClickedPoint.y - p.rf) / newClickedPoint.x;
+                userCalData = [
+                    { x: 0, y: p.rf, ws: storedWs },
+                    { x: axes.xMax, y: p.rf + slope * axes.xMax, ws: storedWs }
+                ];
+            } else {
+                userCalData = [];
+            }
+        }
+
+        drawChart(curveData, stockDot, bondDot, mvp, opt, optimalCalData, axes, rfDot);
+    }
+
+    function drawChart(curveData, stockDot, bondDot, mvp, opt, optimalCalData, axes, rfDot) {
+        const ctx = document.getElementById('portfolioChart').getContext('2d');
+
+        if (chartInstance) {
+            // Update Data
+            chartInstance.data.datasets[0].data = curveData;
+            chartInstance.data.datasets[1].data = [stockDot, bondDot];
+            chartInstance.data.datasets[2].data = [mvp];
+            chartInstance.data.datasets[3].data = userCalData;
+            chartInstance.data.datasets[4].data = showOptimal ? [opt] : [];
+            chartInstance.data.datasets[5].data = showOptimal ? optimalCalData : [];
+            chartInstance.data.datasets[6].data = [rfDot];
+            
+            // Update Axes limits to prevent jumping
+            chartInstance.options.scales.x.max = axes.xMax;
+            chartInstance.options.scales.y.min = axes.yMin;
+            chartInstance.options.scales.y.max = axes.yMax;
+
+            chartInstance.update('none'); 
+        } else {
+            chartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: { 
+                    datasets: [
+                        {
+                            label: 'Investment Opportunity Set',
+                            data: curveData,
+                            borderColor: '#003366',
+                            backgroundColor: '#003366',
+                            borderWidth: 2,
+                            showLine: true,
+                            pointRadius: 2,
+                            pointHitRadius: 5,
+                            pointHoverRadius: 5,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Individual Assets (Stock & Bond)',
+                            data: [stockDot, bondDot],
+                            backgroundColor: '#FFD700', // Yellow
+                            borderColor: '#333333',     // Dark border for contrast
+                            borderWidth: 1,
+                            pointStyle: 'rectRot',
+                            pointRadius: 10, // Doubled from 5
+                            pointHitRadius: 12, // Scaled hit radius
+                            showLine: false
+                        },
+                        {
+                            label: 'Minimum-Variance Portfolio',
+                            data: [mvp],
+                            backgroundColor: '#d9534f',
+                            pointRadius: 4,
+                            pointHitRadius: 5,
+                            pointHoverRadius: 7,
+                            showLine: false
+                        },
+                        {
+                            label: 'User Capital Allocation Line',
+                            data: userCalData,
+                            borderColor: '#17a2b8',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            showLine: true,
+                            pointRadius: 0,
+                            pointHitRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'Optimal Risky Portfolio',
+                            data: showOptimal ? [opt] : [],
+                            backgroundColor: '#28a745',
+                            pointStyle: 'star',
+                            pointRadius: 7,
+                            pointHitRadius: 7,
+                            showLine: false
+                        },
+                        {
+                            label: 'Optimal CAL',
+                            data: showOptimal ? optimalCalData : [],
+                            borderColor: '#28a745',
+                            borderWidth: 2,
+                            showLine: true,
+                            pointRadius: 0,
+                            pointHitRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'Risk-Free Asset',
+                            data: [rfDot],
+                            backgroundColor: '#800080', // Purple
+                            borderColor: '#333333',
+                            borderWidth: 1,
+                            pointRadius: 6,
+                            pointHitRadius: 8,
+                            showLine: false,
+                            clip: false // Prevents the dot from being cut in half by the y-axis
+                        }
+                    ] 
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false, 
+                    interaction: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const pt = context.raw;
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += `Risk (SD): ${pt.x.toFixed(2)}%, Return: ${pt.y.toFixed(2)}%`;
+                                    if (pt.ws !== undefined) {
+                                        label += ` | W_Stock: ${(pt.ws*100).toFixed(0)}%, W_Bond: ${(pt.wb*100).toFixed(0)}%`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Standard Deviation (Risk) %', font: { weight: 'bold' } },
+                            min: 0,
+                            max: axes.xMax
+                        },
+                        y: {
+                            title: { display: true, text: 'Expected Return %', font: { weight: 'bold' } },
+                            min: axes.yMin,
+                            max: axes.yMax
+                        }
+                    },
+                    onClick: (e, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const element = activeElements[0];
+                            const datasetIndex = element.datasetIndex;
+                            
+                            // Allow clicking the Curve (0), Assets (1), MVP (2), or Optimal (4)
+                            if ([0, 1, 2, 4].includes(datasetIndex)) {
+                                const index = element.index;
+                                const clickedPoint = chartInstance.data.datasets[datasetIndex].data[index];
+                                const currentRf = parseFloat(document.getElementById('r_f').value) || 0;
+                                
+                                // Prevent calculation if risk is essentially 0 (to avoid infinite slope)
+                                if (clickedPoint.x > 0.0001) {
+                                    const slope = (clickedPoint.y - currentRf) / clickedPoint.x;
+                                    
+                                    userCalData = [
+                                        { x: 0, y: currentRf, ws: clickedPoint.ws },
+                                        { x: chartInstance.options.scales.x.max, y: currentRf + slope * chartInstance.options.scales.x.max, ws: clickedPoint.ws }
+                                    ];
+                                    
+                                    chartInstance.data.datasets[3].data = userCalData;
+                                    chartInstance.update('none');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // Initialize
+    updateDashboard();
+</script>
+<footer class="ft-tool-bottom"><a href="../index.html">← Return to all financial tools</a> · University of St. Thomas, Opus College of Business</footer>
+</body>
+</html>

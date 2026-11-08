@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="An educational financial calculator for bond prices, yields, time value of money, NPV, and IRR.">
+  <title>Financial Calculator | Financial Tools · St. Thomas</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--purple:#510c76;--purple2:#6e2491;--ink:#25172e;--muted:#6d6575;--line:#e7e1ec;--paper:#fff;--bg:#f6f4f8;--light:#f3edf8;--green:#08796d;--red:#b52b44;--gold:#99630b;--shadow:0 5px 22px #25172e06}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{transition:background .15s,border-color .15s,transform .15s}button:active{transform:translateY(1px)}a{color:var(--purple)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #c496df;outline-offset:3px}button:disabled{cursor:default;opacity:.45}input,select{min-width:0}input{font-variant-numeric:tabular-nums}button svg{vertical-align:middle}h1,h2,h3,p{margin-top:0}h2{font-size:21px;line-height:1.35;letter-spacing:-.4px;margin-bottom:7px}h3{font-size:15px}small{font-size:12px}strong{font-weight:650}[hidden]{display:none!important}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums}.muted{color:var(--muted)}.eyebrow{font-size:11px;font-weight:750;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple)}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .brand{background:#fff;border-top:4px solid var(--purple);border-bottom:1px solid var(--line)}.brand-inner{max-width:1260px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:28px;padding:7px 30px}.brand img{width:230px;max-width:35%;height:auto}.creator{text-align:right;max-width:680px;font-size:12px;line-height:1.65}.creator-name{font-size:14px;font-weight:700}.creator a{font-size:12px;font-weight:500;margin-left:7px;text-underline-offset:3px}.creator-title{color:var(--muted)}
+    main{max-width:1260px;margin:0 auto;padding:32px 30px 0}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:26px}.hero h1{font-size:36px;line-height:1.15;letter-spacing:-1.2px;margin:7px 0 10px}.hero p{color:var(--muted);font-size:14px;margin:0;max-width:630px}.hero-tag{font-size:11px;letter-spacing:.5px;white-space:nowrap;color:var(--green);background:#e7f2ef;padding:7px 12px;border-radius:30px;font-weight:650}.tabs{display:flex;width:fit-content;gap:5px;padding:5px;background:#eae5ef;border-radius:12px;margin-bottom:25px}.tabs button{border:0;background:transparent;padding:12px 22px;border-radius:8px;font-weight:650;color:#716579;font-size:14px}.tabs button[aria-selected=true]{color:var(--purple);background:white;box-shadow:0 2px 6px #24122e0c}.tab-icon{margin-right:8px;font-size:16px}.worksheet{animation:appear .2s ease-out}@keyframes appear{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:none}}.worksheet-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:17px}.worksheet-heading h2{font-size:19px;margin:0}.worksheet-heading p{margin:4px 0 0;color:var(--muted);font-size:13px}.text-button{border:0;background:none;color:var(--purple);font-size:12px;padding:8px 0;font-weight:650;white-space:nowrap}.columns{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:24px;align-items:start}.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:25px;box-shadow:var(--shadow)}.card-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.card-title h3{margin:0;font-size:15px}.card-step{font-size:11px;color:var(--muted)}.control-label{display:block;font-size:12px;font-weight:650;margin-bottom:7px}.select-control,.number-control{width:100%;padding:11px 12px;border:1px solid #dcd4e4;border-radius:8px;background:#fff;color:var(--ink)}.select-control{font-size:13px}.select-control:focus,.number-control:focus{border-color:var(--purple2);outline:2px solid #eadcf2;outline-offset:0}.solve-select{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:18px}.tvm-row{display:grid;grid-template-columns:54px 1fr 172px;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #f0ebf4}.keycap{display:flex;align-items:center;justify-content:center;height:40px;background:#f3eff7;border:1px solid #e4dbea;border-bottom:3px solid #d6cadf;border-radius:7px;color:var(--purple);font:bold 13px ui-monospace,Consolas,monospace}.tvm-label{display:block;font-size:13px;font-weight:650}.tvm-help{display:block;font-size:11px;line-height:1.5;color:var(--muted);margin-top:3px}.numeric-wrap{display:flex;position:relative;align-items:center;gap:5px}.numeric-wrap input{width:100%;font:500 15px ui-monospace,Consolas,monospace;text-align:right;padding:11px 10px;border:1px solid #ded6e6;border-radius:8px;background:white;color:var(--ink)}.numeric-wrap input:read-only{color:var(--purple);background:#f8f3fc;border-color:#cbaedb}.tvm-row.solving .keycap{background:var(--purple);color:white;border-color:#35034f}.solve-badge{display:none;font-size:9px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:var(--purple);margin-left:5px}.solving .solve-badge{display:inline}.flip{background:none;border:1px solid var(--line);border-radius:6px;flex-shrink:0;width:27px;height:28px;padding:0;color:var(--muted);font-size:13px}.settings{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:21px 0 18px}.hint{color:var(--muted);font-size:12px;line-height:1.65;margin:15px 0}.hint strong{color:#4d3c58}.primary{background:var(--purple);color:white;border:1px solid var(--purple);padding:13px 20px;border-radius:9px;font-weight:700;font-size:14px}.primary:hover{background:#3f075d}.secondary{background:white;color:var(--purple);border:1px solid #d8cbe2;padding:9px 13px;border-radius:8px;font-weight:650;font-size:12px}.secondary:hover{background:var(--light)}.actions{display:flex;gap:10px;align-items:center;margin-top:18px}.actions .primary{flex:1}.clear{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:9px;padding:13px 17px;font-size:13px;font-weight:600}.error{margin:16px 0 0;background:#fff0f1;color:#9b1836;border:1px solid #f1c7cf;padding:11px 13px;border-radius:8px;font-size:12px}.examples{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}.examples-label{width:100%;font-size:10px;letter-spacing:1px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:1px}.example{font-size:11px;border:1px solid #e7deee;color:#65516f;background:#fcfaff;border-radius:6px;padding:6px 9px}.example:hover{border-color:#ba98cc;background:#f4edf9}
+    .result-card{background:linear-gradient(135deg,#510c76,#352044);border:0;color:white;box-shadow:0 8px 24px #510c7617;position:relative;overflow:hidden}.result-card:after{content:"";position:absolute;right:-55px;top:-65px;border:1px solid #ffffff0b;border-radius:50%;width:230px;height:230px;pointer-events:none}.result-eyebrow{color:#d8bedf;font-size:11px;font-weight:650;letter-spacing:1.2px;text-transform:uppercase;display:flex;gap:10px;align-items:center;justify-content:space-between}.result-status{font-size:10px;text-transform:none;letter-spacing:0;border:1px solid #ffffff25;border-radius:20px;padding:4px 8px;color:#e9dfef}.result-number{font:500 clamp(30px,3.2vw,46px)/1.25 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:-1.5px;margin:22px 0 10px;overflow-wrap:anywhere}.result-note{min-height:38px;color:#e2d5e9;font-size:12px;margin:0;line-height:1.65}.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:23px;padding-top:19px;border-top:1px solid #ffffff20}.metric-label{display:block;color:#cbb3d6;font-size:10px;letter-spacing:.3px}.metric-value{display:block;font-size:15px;margin-top:4px;font-variant-numeric:tabular-nums}.right-stack{display:flex;flex-direction:column;gap:19px}.explanation{font-size:12px;color:var(--muted);line-height:1.75}.explanation h3{color:var(--ink);margin-bottom:12px;font-size:14px}.formula{font:12px/1.8 ui-monospace,Consolas,monospace;background:#f6f3f9;color:#594663;padding:12px 13px;border-radius:8px;overflow-wrap:anywhere;margin:13px 0}.explanation p:last-child{margin-bottom:0}.pill{display:inline-block;font-size:10px;font-weight:650;letter-spacing:.2px;border-radius:5px;padding:3px 7px;background:#edf5f2;color:var(--green)}.soft-card{padding:20px 23px}.inline-summary{display:flex;justify-content:space-between;gap:20px;font-size:12px;margin-bottom:8px}.inline-summary:last-child{margin:0}.inline-summary strong{color:var(--ink);text-align:right}.help{margin:24px 0 0;border:1px solid var(--line);background:#fff;border-radius:12px;padding:16px 20px;font-size:12px;color:var(--muted)}.help summary{font-size:13px;font-weight:650;color:var(--ink);cursor:pointer}.help p{margin:13px 0 0}.help ul{padding-left:20px;margin-bottom:3px}.help li{margin:7px 0}.help code{font:11px ui-monospace,Consolas,monospace;color:var(--purple)}
+    .cash-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}.initial-flow{margin:0 0 18px;background:#f9f6fb;border:1px solid var(--line);border-radius:10px;padding:15px;display:grid;grid-template-columns:1fr 165px;gap:15px;align-items:center}.initial-flow label{font-size:13px;font-weight:700}.initial-flow small{display:block;color:var(--muted);margin-top:3px;font-size:11px}.initial-flow input{text-align:right;font:500 15px ui-monospace,Consolas,monospace}.flows-heading{display:grid;grid-template-columns:1fr 142px 63px 25px;gap:10px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:22px 0 7px}.flows-heading span:nth-child(2),.flows-heading span:nth-child(3){text-align:center}.flow-row{display:grid;grid-template-columns:1fr 142px 63px 25px;gap:10px;align-items:center;padding:9px 0;border-top:1px solid #f0ebf4}.flow-label{font-size:12px;font-weight:700;color:#54425f}.flow-periods{display:block;font-size:10px;color:var(--muted);font-weight:400;margin-top:2px}.flow-amount,.flow-repeat{width:100%;padding:9px 8px;border:1px solid #ded6e6;border-radius:7px;background:white;font:13px ui-monospace,Consolas,monospace;color:var(--ink);text-align:right}.flow-repeat{text-align:center}.remove-row{border:0;background:transparent;color:#aa96b6;font-size:20px;padding:3px 0}.remove-row:hover{color:var(--red)}.row-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 0}.period-count{font-size:11px;color:var(--muted)}.irr-panel .card-title{margin-bottom:7px}.irr-main{font:600 28px/1.4 ui-monospace,Consolas,monospace;letter-spacing:-1px;color:var(--purple)}.irr-detail{font-size:12px;line-height:1.65;color:var(--muted);margin:7px 0 0}.irr-roots{margin:12px 0 0;padding:0;list-style:none}.irr-roots li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px;font-size:11px;color:var(--muted)}.irr-roots strong{font:600 15px ui-monospace,Consolas,monospace;color:var(--purple)}.notice{background:#fff8e9;border:1px solid #f0e0b6;color:#836122;font-size:11px;padding:10px 12px;border-radius:8px;margin-top:13px;line-height:1.65}.timeline{margin-top:8px}.timeline svg{display:block;width:100%;height:auto}.timeline-label{font-size:10px;color:var(--muted);margin-top:5px}.schedule{margin-top:23px}.schedule summary{font-weight:650;font-size:12px;cursor:pointer}.schedule-scroll{overflow:auto;max-height:310px;margin-top:12px;border:1px solid var(--line);border-radius:9px}.schedule table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}.schedule th{position:sticky;top:0;background:#f4eef8;color:#664a77;font-size:10px;letter-spacing:.4px;text-transform:uppercase;z-index:1}.schedule td,.schedule th{padding:10px 12px;text-align:right;border-bottom:1px solid #eee8f3;font-variant-numeric:tabular-nums}.schedule td:first-child,.schedule th:first-child{text-align:left}.schedule tr:last-child td{border-bottom:0}.export-row{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.footer{padding:28px 0 30px;margin:5px auto 0;font-size:11px;line-height:1.7;color:#827589}.footer strong{color:#5f4b6a}.footer-top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:9px}.footer p{margin:0}.offline-dot{display:inline-block;width:6px;height:6px;border-radius:100%;background:var(--green);margin-right:6px}.tvm-export{font-size:11px;background:none;border:0;color:var(--purple);font-weight:650;padding:6px 0}
+    @media(min-width:1500px){main{padding-top:40px}.hero{margin-bottom:32px}}
+    @media(max-width:1000px){.columns{grid-template-columns:1fr 1fr;gap:18px}.card{padding:20px}.tvm-row{grid-template-columns:42px 1fr 132px;gap:8px}.keycap{height:37px;font-size:12px}.numeric-wrap input{font-size:13px}.tvm-help{font-size:10px}.flows-heading,.flow-row{grid-template-columns:1fr 110px 53px 20px;gap:7px}.hero-tag{display:none}}
+    @media(max-width:780px){main{padding:25px 20px 0}.columns{grid-template-columns:1fr}.brand-inner{padding:4px 20px;gap:12px}.brand img{width:200px}.creator-title{font-size:10px}.hero h1{font-size:30px}.hero p{font-size:13px}.tvm-row{grid-template-columns:48px 1fr 170px;gap:12px}.tvm-help{font-size:11px}.numeric-wrap input{font-size:15px}.right-stack{gap:16px}.result-number{font-size:40px}.tabs{width:100%}.tabs button{flex:1;padding:11px 12px;font-size:13px}.flows-heading,.flow-row{grid-template-columns:1fr 160px 65px 25px;gap:10px}.footer-top{align-items:flex-start;flex-direction:column;gap:6px}}
+    @media(max-width:480px){main{padding:22px 15px 0}.brand-inner{flex-direction:column;gap:0;padding:0 18px 16px}.brand img{max-width:230px;width:210px}.creator{text-align:center}.creator-name{font-size:13px}.creator-title{font-size:11px}.hero{margin-bottom:21px}.hero h1{font-size:29px}.hero .eyebrow{font-size:10px}.tabs button{padding:11px 8px;font-size:12px}.tab-icon{display:none}.worksheet-heading h2{font-size:17px}.worksheet-heading p{font-size:12px}.card{padding:18px}.tvm-row{grid-template-columns:42px minmax(0,1fr) 128px;gap:8px}.tvm-label{font-size:12px}.tvm-help{font-size:10px}.numeric-wrap input{font-size:13px;padding:10px 7px}.flip{width:22px;font-size:11px}.solve-badge{display:none!important}.settings{gap:10px}.control-label{font-size:11px}.select-control{padding:10px 8px;font-size:12px}.result-number{font-size:35px}.initial-flow{grid-template-columns:1fr 135px;padding:12px;gap:10px}.cash-controls{gap:10px}.flows-heading,.flow-row{grid-template-columns:minmax(50px,1fr) minmax(75px,110px) 50px 20px;gap:7px}.flow-amount,.flow-repeat{font-size:12px;padding:9px 6px}.flow-periods{font-size:9px}.primary{font-size:13px}.hint{font-size:11px}.footer{padding-bottom:24px}.hero{gap:0}.cash-controls .control-label{min-height:34px}.irr-roots li{align-items:flex-start;flex-direction:column;gap:4px}.explanation{font-size:11px}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+    @media print{body{background:white}.brand-inner{padding:0}.tabs,.examples,.actions,.text-button,.export-row,.flip,.footer-top span,.tvm-export{display:none!important}.card{box-shadow:none;break-inside:avoid}.result-card{background:#f4edf8;color:#25172e;border:1px solid #c6b7d1}.result-card *{color:#25172e!important}.columns{grid-template-columns:1fr 1fr}.help{break-inside:avoid}.brand{border-top:0}main{padding:20px 0}.hero{margin-bottom:18px}.footer{padding-bottom:0}}
+  </style>
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="brand">
+    <div class="brand-inner">
+      <img src="data:image/png;base64,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" width="739" height="301" alt="University of St. Thomas">
+      <div class="creator">
+        <div class="creator-name">Creator: Jiang (Will) Zhang <a href="https://www.linkedin.com/in/jiang-will-zhang/" target="_blank" rel="noopener noreferrer">(LinkedIn)</a></div>
+        <div class="creator-title">Assistant Professor of Finance, Opus College of Business,<br>University of St. Thomas</div>
+      </div>
+    </div>
+  </header>
+<nav class="ft-tool-nav" aria-label="Financial tools navigation"><div class="ft-tool-nav-inner"><a class="ft-back" href="../index.html">← All financial tools</a><div class="ft-tool-nav-links"><a href="../calculator/index.html" aria-current="page">Financial Calculator</a><a href="../diversification/index.html">Portfolio Diversification</a></div></div></nav>
+
+  <main>
+    <div class="hero">
+      <div><span class="eyebrow">Finance, at your fingertips</span><h1>Financial Calculator</h1><p>Five familiar inputs. A clearer view of bond valuation and investment cash flows.</p></div>
+      <span class="hero-tag">Built for learning</span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Calculator worksheets">
+      <button type="button" id="tab-tvm" role="tab" aria-selected="true" aria-controls="panel-tvm" data-tab="tvm"><span class="tab-icon" aria-hidden="true">▦</span>Bond &amp; TVM</button>
+      <button type="button" id="tab-cash" role="tab" aria-selected="false" aria-controls="panel-cash" tabindex="-1" data-tab="cash"><span class="tab-icon" aria-hidden="true">↗</span>Cash Flow · NPV / IRR</button>
+    </nav>
+
+    <section id="panel-tvm" class="worksheet" role="tabpanel" aria-labelledby="tab-tvm">
+      <div class="worksheet-heading"><div><h2>Bond &amp; time value of money</h2><p>Enter four values, then calculate the fifth.</p></div><button type="button" class="text-button" id="reset-tvm">Reset example ↺</button></div>
+      <div class="columns">
+        <form id="tvm-form" class="card" novalidate>
+          <div class="card-title"><h3>Your five inputs</h3><span class="card-step">01 / Worksheet</span></div>
+          <div class="solve-select"><label class="control-label" for="solve-for">Calculate</label><select id="solve-for" class="select-control"><option value="pv">PV — Bond price / present value</option><option value="iy">I/Y — Annual yield / interest rate</option><option value="n">N — Number of periods</option><option value="pmt">PMT — Payment per period</option><option value="fv">FV — Face / future value</option></select></div>
+          <div class="tvm-row" data-variable="n"><span class="keycap" aria-hidden="true">N</span><div><label class="tvm-label" for="tvm-n">Number of periods <span class="solve-badge">Solve</span></label><span class="tvm-help">Total coupon or payment periods</span></div><div class="numeric-wrap"><input id="tvm-n" type="number" step="any" inputmode="decimal" aria-describedby="period-hint" value="20"></div></div>
+          <div class="tvm-row" data-variable="iy"><span class="keycap" aria-hidden="true">I/Y</span><div><label class="tvm-label" for="tvm-iy">Annual yield (%) <span class="solve-badge">Solve</span></label><span class="tvm-help">Nominal annual interest rate</span></div><div class="numeric-wrap"><input id="tvm-iy" type="number" step="any" inputmode="decimal" value="6"></div></div>
+          <div class="tvm-row solving" data-variable="pv"><span class="keycap" aria-hidden="true">PV</span><div><label class="tvm-label" for="tvm-pv">Present value ($) <span class="solve-badge">Solve</span></label><span class="tvm-help">Bond purchase: enter a negative</span></div><div class="numeric-wrap"><input id="tvm-pv" type="number" step="any" inputmode="decimal" readonly placeholder="Calculated"><button class="flip" type="button" data-flip="pv" aria-label="Change sign of PV" disabled>±</button></div></div>
+          <div class="tvm-row" data-variable="pmt"><span class="keycap" aria-hidden="true">PMT</span><div><label class="tvm-label" for="tvm-pmt">Payment ($) <span class="solve-badge">Solve</span></label><span class="tvm-help">Coupon for one period</span></div><div class="numeric-wrap"><input id="tvm-pmt" type="number" step="any" inputmode="decimal" value="25"><button class="flip" type="button" data-flip="pmt" aria-label="Change sign of PMT">±</button></div></div>
+          <div class="tvm-row" data-variable="fv"><span class="keycap" aria-hidden="true">FV</span><div><label class="tvm-label" for="tvm-fv">Future value ($) <span class="solve-badge">Solve</span></label><span class="tvm-help">Face value repaid at maturity</span></div><div class="numeric-wrap"><input id="tvm-fv" type="number" step="any" inputmode="decimal" value="1000"><button class="flip" type="button" data-flip="fv" aria-label="Change sign of FV">±</button></div></div>
+          <div class="settings"><div><label class="control-label" for="tvm-frequency">Payments per year (P/Y)</label><select id="tvm-frequency" class="select-control"><option value="1">1 · Annual</option><option value="2" selected>2 · Semiannual</option><option value="4">4 · Quarterly</option><option value="12">12 · Monthly</option></select></div><div><label class="control-label" for="tvm-timing">Payment timing</label><select id="tvm-timing" class="select-control"><option value="end">END · End of period</option><option value="begin">BGN · Beginning of period</option></select></div></div>
+          <p class="hint" id="period-hint"><strong>For a bond:</strong> N = years × P/Y; PMT = face value × annual coupon rate ÷ P/Y. Use END timing.</p>
+          <div class="actions"><button class="primary" id="compute-tvm" type="submit">Compute PV</button><button class="clear" id="clear-tvm" type="button">Clear</button></div>
+          <p class="error" id="tvm-error" role="alert" hidden></p>
+          <div class="examples"><span class="examples-label">Try an example</span><button class="example" type="button" data-tvm-example="bond">Coupon bond</button><button class="example" type="button" data-tvm-example="zero">Zero-coupon bond</button><button class="example" type="button" data-tvm-example="loan">Loan payment</button></div>
+        </form>
+        <div class="right-stack">
+          <div class="card result-card" aria-live="polite" aria-atomic="true"><div class="result-eyebrow"><span id="tvm-result-label">Calculated PV</span><span class="result-status" id="tvm-status">Ready</span></div><div class="result-number" id="tvm-result">—</div><p class="result-note" id="tvm-result-note">Choose a variable and select Compute.</p><div class="metric-row"><div><span class="metric-label">YEARS · N ÷ P/Y</span><span class="metric-value mono" id="tvm-years">—</span></div><div><span class="metric-label">INTEREST PER PERIOD</span><span class="metric-value mono" id="tvm-period-rate">—</span></div></div></div>
+          <div class="card soft-card explanation"><h3>Read the cash-flow signs</h3><div class="inline-summary"><span>Money you pay out</span><strong>Negative (−)</strong></div><div class="inline-summary"><span>Money you receive</span><strong>Positive (+)</strong></div><p style="margin-top:13px">When buying a bond, PV is negative; coupons and face value are positive. A calculator-style PV therefore has the opposite sign from the quoted bond price.</p><div class="formula">PV + PMT × A × timing + FV × D = 0</div><p><span class="mono">D = (1 + r)<sup>−N</sup></span><br><span class="mono">A = (1 − D) / r</span>, or N when r = 0.<br><span class="mono">r = I/Y ÷ 100 ÷ P/Y</span>. Timing is 1 for END and (1 + r) for BGN.</p></div>
+          <div class="card soft-card explanation"><h3>Current interpretation</h3><p id="tvm-interpretation">Results will be explained here.</p><button type="button" class="tvm-export" id="export-tvm" disabled>↓ Download worksheet CSV</button></div>
+        </div>
+      </div>
+      <details class="help"><summary>How to use the five-input worksheet</summary><ul><li><strong>Price:</strong> choose PV, then enter the total periods, annual yield, coupon per period, and face value.</li><li><strong>Yield to maturity:</strong> choose I/Y and enter the purchase price as a negative PV. I/Y is a nominal annual yield; effective annual yield is different.</li><li><strong>Frequency:</strong> 10 years with semiannual coupons means N = 20 and P/Y = 2. A 5% coupon on $1,000 means PMT = $25.</li><li><strong>Zero-coupon bond:</strong> set PMT = 0. For a loan, PV is usually positive, PMT negative, and FV = 0.</li><li><strong>Scope:</strong> fixed, equally spaced payments with matching payment and compounding frequencies. Bond examples assume settlement on a coupon date; accrued interest, calendar day counts, and callable-bond features are not included.</li><li>N can be fractional for a general TVM calculation. Regular coupon bonds use whole coupon periods. N is limited to 10,000.</li><li>Yield solving requires a conventional cash-flow pattern: PV has the opposite sign from PMT and FV. The numerical search supports per-period yields from −99.99% to 1,000,000%.</li></ul></details>
+    </section>
+
+    <section id="panel-cash" class="worksheet" role="tabpanel" aria-labelledby="tab-cash" hidden>
+      <div class="worksheet-heading"><div><h2>Cash-flow worksheet</h2><p>Value a series of future cash flows, including repeated payments.</p></div><button class="text-button" type="button" id="reset-cash">Reset example ↺</button></div>
+      <div class="columns">
+        <form id="cash-form" class="card" novalidate>
+          <div class="card-title"><h3>Build your cash flows</h3><span class="card-step">02 / Worksheet</span></div>
+          <div class="initial-flow"><div><label for="cf0">CF0 · Initial cash flow</label><small>Today, at time 0</small></div><input class="number-control" id="cf0" type="number" step="any" inputmode="decimal" value="-10000"></div>
+          <div class="cash-controls"><div><label class="control-label" for="discount-rate">Discount rate per period (%)</label><input class="number-control mono" id="discount-rate" type="number" step="any" inputmode="decimal" value="10"></div><div><label class="control-label" for="cash-frequency">Periods per year</label><select class="select-control" id="cash-frequency"><option value="1">1 · Annual</option><option value="2">2 · Semiannual</option><option value="4">4 · Quarterly</option><option value="12">12 · Monthly</option></select></div></div>
+          <p class="hint">The discount rate applies to <strong>one cash-flow period</strong>. Periods per year is used only to show an effective annual IRR.</p>
+          <div class="flows-heading" aria-hidden="true"><span>Cash flow</span><span>Amount ($)</span><span>Repeat</span><span></span></div>
+          <div id="cash-rows"></div>
+          <div class="row-actions"><button class="secondary" id="add-flow" type="button">+ Add cash flow</button><span class="period-count" id="period-count">4 future periods</span></div>
+          <p class="hint"><strong>Repeat</strong> is the number of consecutive periods with that amount. Include a cash flow of 0 for a period with no payment.</p>
+          <div class="actions"><button class="primary" type="submit">Compute NPV &amp; IRR</button><button class="clear" id="clear-cash" type="button">Clear</button></div>
+          <p class="error" id="cash-error" role="alert" hidden></p>
+          <div class="examples"><span class="examples-label">Try an example</span><button class="example" type="button" data-cash-example="project">Investment project</button><button class="example" type="button" data-cash-example="annuity">Repeated cash flows</button><button class="example" type="button" data-cash-example="multiple">Multiple IRRs</button></div>
+        </form>
+        <div class="right-stack">
+          <div class="card result-card" aria-live="polite" aria-atomic="true"><div class="result-eyebrow"><span>Net present value</span><span class="result-status" id="npv-status">Ready</span></div><div class="result-number" id="npv-result">—</div><p class="result-note" id="npv-note">Discounted cash inflows less cash outflows, including CF0.</p><div class="metric-row"><div><span class="metric-label">DISCOUNT RATE / PERIOD</span><span class="metric-value mono" id="npv-rate">—</span></div><div><span class="metric-label">FUTURE PERIODS</span><span class="metric-value mono" id="npv-periods">—</span></div></div></div>
+          <div class="card soft-card irr-panel" aria-live="polite"><div class="card-title"><h3>Internal rate of return</h3><span class="pill">NPV = 0</span></div><div class="irr-main" id="irr-result">—</div><p class="irr-detail" id="irr-detail">The discount rate that sets NPV to zero.</p><ul class="irr-roots" id="irr-roots"></ul><p class="notice" id="irr-warning" hidden></p></div>
+          <div class="card soft-card explanation"><h3>Cash-flow timeline</h3><div class="timeline" id="cash-timeline"><p class="muted">Calculate to view the timeline.</p></div><p class="timeline-label" id="timeline-caption">Negative amounts are outflows; positive amounts are inflows.</p><div class="formula">NPV = CF0 + Σ [CFt / (1 + i)<sup>t</sup>]</div><p>CF0 occurs today. Each future payment occurs at the end of its period. IRR uses the same cash flows and timing as NPV.</p></div>
+        </div>
+      </div>
+      <details class="schedule" id="cash-schedule" hidden><summary>View discounted cash-flow schedule</summary><div class="schedule-scroll"><table><thead><tr><th scope="col">Period</th><th scope="col">Cash flow ($)</th><th scope="col">Discount factor</th><th scope="col">Present value ($)</th></tr></thead><tbody id="schedule-body"></tbody></table></div></details>
+      <div class="export-row"><button type="button" class="secondary" id="export-cash" disabled>↓ Download cash-flow CSV</button></div>
+      <details class="help"><summary>Timing, rate conventions &amp; interpreting IRR</summary><ul><li>The worksheet uses equally spaced periods. It is an NPV / IRR calculator, not XNPV / XIRR for irregular dates.</li><li>The entered discount rate and reported IRR are <strong>per period</strong>. For monthly cash flows, enter a monthly discount rate.</li><li>Effective annual IRR = <code>(1 + periodic IRR)<sup>periods per year</sup> − 1</code>. Changing periods per year does not change periodic NPV or IRR.</li><li>Repeat expands a cash-flow row into consecutive equal payments. Up to 100 groups and 600 future periods are supported.</li><li>IRR needs at least one inflow and one outflow. Multiple sign changes can produce multiple IRRs or no IRR. All numerically detected roots in the supported range are shown; do not treat one as a unique answer when several are listed.</li><li>The IRR search range is −99.99% to 1,000,000% per period. Repeated or nearly repeated roots are numerically sensitive. “No IRR found” means no root was detected in that range.</li><li>If all cash flows are zero, IRR is indeterminate: every discount rate produces zero NPV.</li></ul></details>
+    </section>
+    <footer class="footer"><div class="footer-top"><strong>Financial Calculator · University of St. Thomas</strong><span><i class="offline-dot" aria-hidden="true"></i>Works offline · Calculations stay in your browser</span></div><p>This tool is for educational purposes only and does not constitute financial, investment, or legal advice.</p></footer>
+  </main>
+  <noscript><p style="padding:20px">Please enable JavaScript to use the calculator.</p></noscript>
+  <script id="calculator-engine">// Pure numerical functions. Rates passed to NPV/IRR are decimals per period.
+(function () {
+  'use strict';
+  const LIMIT = 600;
+  const LOG_Q_MIN = -Math.log(10001);
+  const LOG_Q_MAX = Math.log(10000);
+
+  function finite(value, label) {
+    if (!Number.isFinite(value)) throw new Error(`${label} must be a finite number.`);
+    return value;
+  }
+
+  function annuity(n, r) {
+    return r === 0 ? n : -Math.expm1(-n * Math.log1p(r)) / r;
+  }
+
+  // Scaled TVM identity, avoiding overflow at very negative trial yields.
+  function balanceAtLogRate(v, x) {
+    const r = Math.expm1(x);
+    const exponent = -v.n * x;
+    const shift = Math.max(0, exponent);
+    const one = Math.exp(-shift);
+    const d = Math.exp(exponent - shift);
+    let a;
+    if (r === 0) a = v.n;
+    else if (Math.abs(exponent) < 1e-4) a = -Math.expm1(exponent) / r * one;
+    else a = (one - d) / r;
+    const scale = Math.max(Math.abs(v.pv), Math.abs(v.pmt) * v.n, Math.abs(v.fv), 1);
+    return (v.pv / scale) * one + (v.pmt / scale) * (v.begin ? Math.exp(x) : 1) * a + (v.fv / scale) * d;
+  }
+
+  function bisect(fn, left, right) {
+    let a = left, b = right, fa = fn(a), fb = fn(b);
+    if (fa === 0) return a;
+    if (fb === 0) return b;
+    if (Math.sign(fa) === Math.sign(fb)) return null;
+    for (let i = 0; i < 180; i++) {
+      const m = a + (b - a) / 2, fm = fn(m);
+      if (fm === 0 || b - a < 1e-13) return m;
+      if (Math.sign(fm) === Math.sign(fa)) { a = m; fa = fm; }
+      else { b = m; fb = fm; }
+    }
+    return (a + b) / 2;
+  }
+
+  function solveTVM(input, target) {
+    const v = { ...input, begin: !!input.begin };
+    if (!['n', 'iy', 'pv', 'pmt', 'fv'].includes(target)) throw new Error('Choose a variable to calculate.');
+    if (!Number.isInteger(v.m) || v.m < 1 || v.m > 365) throw new Error('Payments per year must be a positive integer.');
+    for (const key of ['n', 'iy', 'pv', 'pmt', 'fv']) if (key !== target) finite(v[key], key.toUpperCase());
+    if (target !== 'n' && (!(v.n > 0) || v.n > 10000)) throw new Error('N must be greater than zero and no more than 10,000 periods.');
+    let r = v.iy / 100 / v.m;
+    if (target !== 'iy' && r <= -1) throw new Error('The interest rate per period must be greater than −100%.');
+    if (target === 'iy') {
+      if (v.pv === 0 || (v.pmt === 0 && v.fv === 0)) throw new Error('A yield calculation needs a nonzero PV and at least one nonzero future cash flow.');
+      if (v.begin && v.n === 1 && v.fv === 0 && v.pv + v.pmt === 0) throw new Error('These inputs do not determine a unique yield: the offsetting cash flows both occur today.');
+      const sign = Math.sign(v.pv);
+      if ((v.pmt && Math.sign(v.pmt) === sign) || (v.fv && Math.sign(v.fv) === sign)) {
+        throw new Error('Use opposite signs for PV and the future payments. For mixed-sign future cash flows, use the Cash Flow worksheet.');
+      }
+      const x = bisect(z => balanceAtLogRate(v, z), Math.log(0.0001), Math.log(10001));
+      if (x === null) throw new Error('No yield found within the supported per-period range (−99.99% to 1,000,000%).');
+      r = Math.expm1(x);
+      v.iy = r * 100 * v.m;
+    } else if (target === 'n') {
+      const p = v.pmt * (v.begin ? 1 + r : 1);
+      if (r === 0) {
+        if (p === 0) throw new Error('These inputs do not determine a unique N. Enter a nonzero payment or interest rate.');
+        v.n = -(v.pv + v.fv) / p;
+      } else {
+        const denominator = p - r * v.fv;
+        if (denominator === 0) throw new Error('These inputs do not produce a unique finite N.');
+        const change = r * (v.pv + v.fv) / denominator;
+        if (change <= -1) throw new Error('No positive finite N exists for these inputs. Check the signs and payment amount.');
+        v.n = -Math.log1p(change) / Math.log1p(r);
+      }
+      if (!(v.n > 0) || v.n > 10000) throw new Error('The solution for N is outside the supported range (0 to 10,000 periods).');
+    } else {
+      const d = Math.exp(-v.n * Math.log1p(r));
+      const a = annuity(v.n, r) * (v.begin ? 1 + r : 1);
+      if (target === 'pv') v.pv = -v.pmt * a - v.fv * d;
+      if (target === 'pmt') v.pmt = -(v.pv + v.fv * d) / a;
+      if (target === 'fv') v.fv = -(v.pv + v.pmt * a) / d;
+    }
+    finite(v[target], 'Result');
+    return { ...v, rate: r, years: v.n / v.m };
+  }
+
+  function npv(rate, flows) {
+    finite(rate, 'Discount rate');
+    if (rate <= -1) throw new Error('The discount rate must be greater than −100% per period.');
+    if (!Array.isArray(flows) || !flows.length) throw new Error('Enter at least one cash flow.');
+    let sum = 0, correction = 0;
+    const log = Math.log1p(rate);
+    for (let t = 0; t < flows.length; t++) {
+      finite(flows[t], `Cash flow ${t}`);
+      const term = flows[t] === 0 ? 0 : flows[t] * Math.exp(-t * log);
+      finite(term, 'Discounted cash flow (reduce the horizon or rate magnitude)');
+      const adjusted = term - correction, next = sum + adjusted;
+      correction = (next - sum) - adjusted;
+      sum = next;
+    }
+    return finite(sum, 'NPV');
+  }
+
+  function signChanges(values) {
+    let last = 0, count = 0;
+    for (const value of values) {
+      const sign = Math.sign(value);
+      if (sign) { if (last && sign !== last) count++; last = sign; }
+    }
+    return count;
+  }
+
+  // Positive polynomial roots in q = 1 / (1 + IRR). Critical points isolate
+  // roots, including repeated roots that a simple sign-change scan misses.
+  function polynomialValue(coefficients, z) {
+    const degree = coefficients.length - 1;
+    const shift = Math.max(0, degree * z);
+    let value = 0, magnitude = 0, correction = 0;
+    for (let i = 0; i <= degree; i++) {
+      if (!coefficients[i]) continue;
+      const term = coefficients[i] * Math.exp(i * z - shift);
+      const adjusted = term - correction, next = value + adjusted;
+      correction = (next - value) - adjusted;
+      value = next;
+      magnitude += Math.abs(term);
+    }
+    return { value, magnitude };
+  }
+
+  function positiveRoots(values) {
+    let coefficients = values.slice();
+    while (coefficients.length && coefficients[0] === 0) coefficients.shift();
+    while (coefficients.length && coefficients[coefficients.length - 1] === 0) coefficients.pop();
+    if (coefficients.length < 2 || signChanges(coefficients) === 0) return [];
+    const scale = Math.max(...coefficients.map(Math.abs));
+    coefficients = coefficients.map(x => x / scale);
+    const evaluate = x => polynomialValue(coefficients, x);
+    const critical = signChanges(coefficients) === 1 ? [] : positiveRoots(coefficients.slice(1).map((x, i) => x * (i + 1)));
+    const knots = [LOG_Q_MIN, ...critical, LOG_Q_MAX];
+    const roots = [];
+    const valuesAt = knots.map(evaluate);
+    const isZero = result => Math.abs(result.value) <= 2e-12 * result.magnitude;
+    for (let i = 0; i < knots.length; i++) {
+      if (isZero(valuesAt[i])) roots.push(knots[i]);
+      if (i && !isZero(valuesAt[i - 1]) && !isZero(valuesAt[i]) && Math.sign(valuesAt[i - 1].value) !== Math.sign(valuesAt[i].value)) {
+        roots.push(bisect(x => evaluate(x).value, knots[i - 1], knots[i]));
+      }
+    }
+    return roots.filter(x => x !== null).sort((a, b) => a - b).filter((x, i, all) => i === 0 || Math.abs(x - all[i - 1]) > 1e-7);
+  }
+
+  function irr(flows) {
+    if (!Array.isArray(flows) || flows.length < 2) throw new Error('IRR requires CF0 and at least one future cash flow.');
+    if (flows.length - 1 > LIMIT) throw new Error(`Use no more than ${LIMIT} future periods.`);
+    flows.forEach((x, i) => finite(x, `Cash flow ${i}`));
+    const changes = signChanges(flows);
+    if (flows.every(x => x === 0)) return { roots: [], signChanges: 0, status: 'indeterminate' };
+    if (!changes) return { roots: [], signChanges: 0, status: 'same-sign' };
+    const roots = positiveRoots(flows).map(z => Math.expm1(-z)).sort((a, b) => a - b);
+    return { roots, signChanges: changes, status: roots.length ? 'found' : 'not-found' };
+  }
+
+  function expandCashFlows(initial, groups) {
+    finite(initial, 'CF0');
+    if (!Array.isArray(groups) || !groups.length) throw new Error('Add at least one future cash flow.');
+    const flows = [initial];
+    for (let i = 0; i < groups.length; i++) {
+      const { amount, repeat } = groups[i];
+      finite(amount, `CF${i + 1}`);
+      if (!Number.isInteger(repeat) || repeat < 1) throw new Error(`Repeat for CF${i + 1} must be a positive whole number.`);
+      if (flows.length - 1 + repeat > LIMIT) throw new Error(`Use no more than ${LIMIT} future periods in total.`);
+      for (let j = 0; j < repeat; j++) flows.push(amount);
+    }
+    return flows;
+  }
+
+  globalThis.FinanceMath = Object.freeze({ solveTVM, npv, irr, expandCashFlows, signChanges, maxPeriods: LIMIT });
+})();
+</script>
+  <script id="calculator-app">
+  (function () {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const math = FinanceMath;
+    const fields = ['n','iy','pv','pmt','fv'];
+    const labels = { n:'N', iy:'I/Y', pv:'PV', pmt:'PMT', fv:'FV' };
+    let tvmSolution = null, cashSolution = null;
+    let cashGroups = [{amount:'3000',repeat:'1'},{amount:'4000',repeat:'1'},{amount:'5000',repeat:'1'},{amount:'6000',repeat:'1'}];
+    const cleanZero = value => Math.abs(value) < 1e-10 ? 0 : value;
+    function num(value, decimals=6) { value=cleanZero(value); return Math.abs(value)>=1e10 ? value.toExponential(5) : value.toLocaleString('en-US',{maximumFractionDigits:decimals}); }
+    function money(value) { value=cleanZero(value); if(Math.abs(value)>=1e12) return (value<0?'−':'')+'$'+Math.abs(value).toExponential(5); return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(value); }
+    const percent = value => num(value*100,6)+'%';
+    function read(id, label) { const text=$(id).value.trim(); if(text==='') throw new Error('Enter '+label+'.'); const value=Number(text); if(!Number.isFinite(value)) throw new Error(label+' must be a valid number.'); return value; }
+    function download(name, text) { const url=URL.createObjectURL(new Blob(['\ufeff'+text],{type:'text/csv;charset=utf-8'})); const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000); }
+    function activateTab(name, focus=false) { document.querySelectorAll('[data-tab]').forEach(button=>{const selected=button.dataset.tab===name;button.setAttribute('aria-selected',String(selected));button.tabIndex=selected?0:-1;$('panel-'+button.dataset.tab).hidden=!selected;if(selected&&focus)button.focus();}); }
+    document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>activateTab(button.dataset.tab));button.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();activateTab(event.key==='Home'?'tvm':event.key==='End'?'cash':button.dataset.tab==='tvm'?'cash':'tvm',true);}});});
+
+    function markTvmDirty(message='Inputs changed. Select Compute to update.') { tvmSolution=null;$('tvm-error').hidden=true;$('tvm-result').textContent='—';$('tvm-status').textContent='Ready';$('tvm-result-note').textContent=message;$('tvm-years').textContent='—';$('tvm-period-rate').textContent='—';$('tvm-interpretation').textContent='Calculate to see the interpretation.';$('export-tvm').disabled=true; }
+    function selectTarget() { const target=$('solve-for').value;fields.forEach(key=>{const row=document.querySelector('[data-variable="'+key+'"]');const selected=key===target;row.classList.toggle('solving',selected);$('tvm-'+key).readOnly=selected;const flip=row.querySelector('[data-flip]');if(flip)flip.disabled=selected;});$('compute-tvm').textContent='Compute '+labels[target];$('tvm-result-label').textContent='Calculated '+labels[target];markTvmDirty(); }
+    function computeTvm(event) {
+      if(event)event.preventDefault();
+      markTvmDirty();
+      try {
+        const target=$('solve-for').value, input={m:Number($('tvm-frequency').value),begin:$('tvm-timing').value==='begin'};
+        fields.forEach(key=>{input[key]=key===target?0:read('tvm-'+key,labels[key]);});
+        const v=math.solveTVM(input,target);tvmSolution={...v,target};$('tvm-'+target).value=Number(v[target].toPrecision(14));
+        $('tvm-result').textContent=target==='iy'?num(v.iy,6)+'%':target==='n'?num(v.n,6):money(v[target]);
+        $('tvm-status').textContent='Computed';$('tvm-years').textContent=num(v.years,6);$('tvm-period-rate').textContent=percent(v.rate);
+        let note;
+        if(target==='pv')note='Present value uses the cash-flow sign convention. Its magnitude is '+money(Math.abs(v.pv))+'.';
+        else if(target==='iy')note='Nominal annual rate, compounded '+v.m+' time'+(v.m===1?'':'s')+' per year. Effective annual rate: '+percent(Math.expm1(v.m*Math.log1p(v.rate)))+'.';
+        else if(target==='n')note=num(v.n,6)+' payment periods = '+num(v.years,6)+' years at '+v.m+' payment'+(v.m===1?'':'s')+' per year.';
+        else if(target==='pmt')note=(v.pmt<0?'A payment you make':'A payment you receive')+' each period, '+v.m+' time'+(v.m===1?'':'s')+' per year.';
+        else note='Future value at the end of '+num(v.n,6)+' periods, separate from any regular payment.';
+        $('tvm-result-note').textContent=note;
+        let interpretation='A '+(v.begin?'beginning':'end')+'-of-period payment stream over '+num(v.years,6)+' years, using '+percent(v.rate)+' per period.';
+        if(!v.begin&&v.fv>0&&v.pmt>=0&&v.pv<0){const price=-v.pv;const tolerance=1e-8*Math.max(1,v.fv);const kind=Math.abs(price-v.fv)<tolerance?'at par':price<v.fv?'at a discount':'at a premium';interpretation='Bond price: '+money(price)+' on face value '+money(v.fv)+', '+kind+'. Annual coupon rate: '+percent(v.pmt*v.m/v.fv)+'.';}
+        if(Math.abs(v.n-Math.round(v.n))>1e-8)interpretation+=' N is fractional; a regular coupon bond requires whole coupon periods.';
+        $('tvm-interpretation').textContent=interpretation;$('export-tvm').disabled=false;
+      }catch(error){$('tvm-error').textContent=error.message;$('tvm-error').hidden=false;$('tvm-status').textContent='Check inputs';}
+    }
+    $('tvm-form').addEventListener('submit',computeTvm);$('solve-for').addEventListener('change',selectTarget);
+    fields.forEach(key=>$('tvm-'+key).addEventListener('input',()=>markTvmDirty()));['tvm-frequency','tvm-timing'].forEach(id=>$(id).addEventListener('change',()=>markTvmDirty()));
+    document.querySelectorAll('[data-flip]').forEach(button=>button.addEventListener('click',()=>{const input=$('tvm-'+button.dataset.flip);if(input.value.trim()!==''){input.value=-Number(input.value);markTvmDirty();}}));
+    function tvmExample(name) { const examples={bond:{n:20,iy:6,pv:-925.6126256989,pmt:25,fv:1000,m:2,target:'pv'},zero:{n:10,iy:5,pv:-613.9132535408,pmt:0,fv:1000,m:1,target:'pv'},loan:{n:360,iy:6,pv:300000,pmt:0,fv:0,m:12,target:'pmt'}};const v=examples[name];fields.forEach(key=>$('tvm-'+key).value=v[key]);$('solve-for').value=v.target;$('tvm-frequency').value=v.m;$('tvm-timing').value='end';selectTarget();computeTvm(); }
+    document.querySelectorAll('[data-tvm-example]').forEach(button=>button.addEventListener('click',()=>tvmExample(button.dataset.tvmExample)));$('reset-tvm').addEventListener('click',()=>tvmExample('bond'));
+    $('clear-tvm').addEventListener('click',()=>{fields.forEach(key=>$('tvm-'+key).value='');markTvmDirty('Enter four values and choose the variable to calculate.');});
+    $('export-tvm').addEventListener('click',()=>{if(!tvmSolution)return;const v=tvmSolution;download('financial-calculator-tvm.csv','Variable,Value,Units\r\n'+fields.map(key=>[labels[key],v[key],key==='n'?'periods':key==='iy'?'nominal annual percent':'USD'].join(',')).join('\r\n')+'\r\nP/Y,'+v.m+',payments per year\r\nTiming,'+(v.begin?'BGN':'END')+',\r\nCalculated,'+labels[v.target]+',\r\n');});
+
+    function markCashDirty() { cashSolution=null;$('cash-error').hidden=true;$('npv-result').textContent='—';$('npv-status').textContent='Ready';$('npv-note').textContent='Select Compute to update NPV and IRR.';$('npv-rate').textContent='—';$('npv-periods').textContent='—';$('irr-result').textContent='—';$('irr-detail').textContent='The discount rate that sets NPV to zero.';$('irr-roots').innerHTML='';$('irr-warning').hidden=true;$('cash-timeline').innerHTML='<p class="muted">Calculate to view the timeline.</p>';$('timeline-caption').textContent='Negative amounts are outflows; positive amounts are inflows.';$('cash-schedule').hidden=true;$('schedule-body').innerHTML='';$('export-cash').disabled=true; }
+    function renderCashRows() { $('cash-rows').innerHTML=cashGroups.map((group,index)=>'<div class="flow-row" data-row="'+index+'"><label class="flow-label" for="cf-amount-'+index+'">CF'+(index+1)+'<span class="flow-periods" data-periods="'+index+'"></span></label><input class="flow-amount" id="cf-amount-'+index+'" type="number" step="any" inputmode="decimal" aria-label="Cash flow '+(index+1)+' amount" data-cf-amount="'+index+'"><input class="flow-repeat" type="number" min="1" max="600" step="1" inputmode="numeric" aria-label="Cash flow '+(index+1)+' repeat count" data-cf-repeat="'+index+'"><button type="button" class="remove-row" aria-label="Remove cash flow '+(index+1)+'" data-remove-row="'+index+'" '+(cashGroups.length===1?'disabled':'')+'>×</button></div>').join('');cashGroups.forEach((group,index)=>{$('cf-amount-'+index).value=group.amount;document.querySelector('[data-cf-repeat="'+index+'"]').value=group.repeat;});updatePeriodLabels();$('add-flow').disabled=cashGroups.length>=100; }
+    function updatePeriodLabels() { let t=1;cashGroups.forEach((group,index)=>{const repeat=Number(group.repeat),valid=Number.isInteger(repeat)&&repeat>0&&repeat<=600;document.querySelector('[data-periods="'+index+'"]').textContent=valid?(repeat===1?'period '+t:'periods '+t+'–'+(t+repeat-1)):'check repeat';if(valid)t+=repeat;});$('period-count').textContent=(t-1)+' future period'+(t===2?'':'s'); }
+    $('cash-rows').addEventListener('input',event=>{const el=event.target;if(el.dataset.cfAmount!==undefined)cashGroups[Number(el.dataset.cfAmount)].amount=el.value;if(el.dataset.cfRepeat!==undefined){cashGroups[Number(el.dataset.cfRepeat)].repeat=el.value;updatePeriodLabels();}markCashDirty();});
+    $('cash-rows').addEventListener('click',event=>{const button=event.target.closest('[data-remove-row]');if(!button||cashGroups.length===1)return;cashGroups.splice(Number(button.dataset.removeRow),1);renderCashRows();markCashDirty();});
+    $('add-flow').addEventListener('click',()=>{if(cashGroups.length>=100)return;cashGroups.push({amount:'0',repeat:'1'});renderCashRows();markCashDirty();$('cf-amount-'+(cashGroups.length-1)).focus();});
+    ['cf0','discount-rate'].forEach(id=>$(id).addEventListener('input',markCashDirty));$('cash-frequency').addEventListener('change',markCashDirty);
+    function timeline(flows) { const count=flows.length,max=Math.max(...flows.map(Math.abs),1);const indices=count<=24?flows.map((_,i)=>i):[...Array(23).keys(),count-1];const width=480,height=130,spacing=(width-24)/indices.length,barWidth=Math.min(25,spacing*.63);let svg='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Cash-flow timeline: inflows above the line and outflows below"><line x1="9" y1="65" x2="471" y2="65" stroke="#d9ccdf"/>';indices.forEach((t,index)=>{const amount=flows[t],barHeight=Math.max(amount===0?0:2,Math.abs(amount)/max*47),x=12+spacing*(index+.5),y=amount>=0?65-barHeight:65;svg+='<rect x="'+(x-barWidth/2)+'" y="'+y+'" width="'+barWidth+'" height="'+barHeight+'" rx="2" fill="'+(amount<0?'#c0566b':'#743298')+'"><title>t='+t+': '+money(amount)+'</title></rect><text x="'+x+'" y="127" text-anchor="middle" font-size="9" fill="#8c7c94">'+t+'</text>';});svg+='</svg>';$('cash-timeline').innerHTML=svg;$('timeline-caption').textContent=count>24?'First 23 periods and final period shown. Full values are in the schedule below.':'Periods start at 0 (today). Outflows are shown below the line.'; }
+    function computeCash(event) {
+      if(event)event.preventDefault();markCashDirty();
+      try {
+        const initial=read('cf0','CF0'),rate=read('discount-rate','the discount rate')/100,m=Number($('cash-frequency').value);
+        const groups=cashGroups.map((group,index)=>{if(group.amount.trim()==='')throw new Error('Enter the amount for CF'+(index+1)+'.');if(group.repeat.trim()==='')throw new Error('Enter the repeat count for CF'+(index+1)+'.');return{amount:Number(group.amount),repeat:Number(group.repeat)};});
+        const flows=math.expandCashFlows(initial,groups),npv=math.npv(rate,flows),irr=math.irr(flows);cashSolution={flows,rate,m,npv,irr};
+        $('npv-result').textContent=money(npv);const tolerance=1e-10*Math.max(...flows.map(Math.abs),1);$('npv-status').textContent=Math.abs(npv)<tolerance?'Zero NPV':npv>0?'Positive NPV':'Negative NPV';$('npv-rate').textContent=percent(rate);$('npv-periods').textContent=flows.length-1;
+        $('npv-note').textContent='Present value of future cash flows: '+money(npv-initial)+'. Initial cash flow: '+money(initial)+'.';
+        if(irr.roots.length===1){$('irr-result').textContent=percent(irr.roots[0]);$('irr-detail').textContent='Per period · Effective annual IRR: '+percent(Math.expm1(m*Math.log1p(irr.roots[0])))+'.';}
+        else if(irr.roots.length>1){$('irr-result').textContent=irr.roots.length+' IRRs found';$('irr-detail').textContent='This cash-flow pattern does not have a unique IRR.';$('irr-roots').innerHTML=irr.roots.map(root=>'<li><strong>'+percent(root)+' / period</strong><span>'+percent(Math.expm1(m*Math.log1p(root)))+' effective annual</span></li>').join('');}
+        else{$('irr-result').textContent=irr.status==='indeterminate'?'Indeterminate':irr.status==='same-sign'?'No IRR':'No IRR found';$('irr-detail').textContent=irr.status==='indeterminate'?'All cash flows are zero, so every rate gives NPV = 0.':irr.status==='same-sign'?'IRR requires at least one positive and one negative cash flow.':'No solution was detected within the supported search range. Check the timing and signs.';}
+        if(irr.signChanges>1){$('irr-warning').hidden=false;$('irr-warning').textContent='There are '+irr.signChanges+' cash-flow sign changes. IRR may have multiple solutions or none. Compare NPV at the relevant discount rate and review the complete cash-flow pattern.';}
+        timeline(flows);$('schedule-body').innerHTML=flows.map((amount,t)=>{const factor=Math.exp(-t*Math.log1p(rate)),pv=amount===0?0:amount*factor;return'<tr><td>'+t+(t===0?' · CF0':'')+'</td><td class="mono">'+num(amount,6)+'</td><td class="mono">'+num(factor,8)+'</td><td class="mono">'+num(pv,6)+'</td></tr>';}).join('');$('cash-schedule').hidden=false;$('export-cash').disabled=false;
+      }catch(error){$('cash-error').textContent=error.message;$('cash-error').hidden=false;$('npv-status').textContent='Check inputs';}
+    }
+    $('cash-form').addEventListener('submit',computeCash);
+    function cashExample(name) { const examples={project:{initial:-10000,rate:10,groups:[[3000,1],[4000,1],[5000,1],[6000,1]]},annuity:{initial:-1000,rate:8,groups:[[300,5]]},multiple:{initial:-100,rate:15,groups:[[230,1],[-132,1]]}};const v=examples[name];$('cf0').value=v.initial;$('discount-rate').value=v.rate;$('cash-frequency').value='1';cashGroups=v.groups.map(([amount,repeat])=>({amount:String(amount),repeat:String(repeat)}));renderCashRows();computeCash(); }
+    document.querySelectorAll('[data-cash-example]').forEach(button=>button.addEventListener('click',()=>cashExample(button.dataset.cashExample)));$('reset-cash').addEventListener('click',()=>cashExample('project'));
+    $('clear-cash').addEventListener('click',()=>{$('cf0').value='';$('discount-rate').value='';cashGroups=[{amount:'',repeat:'1'}];renderCashRows();markCashDirty();});
+    $('export-cash').addEventListener('click',()=>{if(!cashSolution)return;const s=cashSolution;const lines=['Discount rate per period percent,'+(s.rate*100),'Periods per year,'+s.m,'NPV,'+s.npv,'IRR per period percent,'+s.irr.roots.map(x=>x*100).join(';'),'IRR status,'+s.irr.status,'','Period,Cash flow USD,Discount factor,Present value USD'];s.flows.forEach((amount,t)=>{const factor=Math.exp(-t*Math.log1p(s.rate));lines.push([t,amount,factor,amount===0?0:amount*factor].join(','));});download('financial-calculator-cash-flows.csv',lines.join('\r\n'));});
+    selectTarget();computeTvm();renderCashRows();computeCash();
+  })();
+  </script>
+</body>
+</html>
